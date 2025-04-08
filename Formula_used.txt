@@ -1,0 +1,115 @@
+==============================
+🎯 EXCEL FORMULAS USED FOR DATA CLEANING
+Dataset: Netflix Movies and TV Shows
+Cleaned By: Gaurav Tawri
+==============================
+
+🔹 1. TEXT CLEANING
+------------------------------
+Remove extra spaces:
+=TRIM(A2)
+
+Remove non-printable characters:
+=CLEAN(A2)
+
+Standardize text to proper case (e.g., Titles, Country, Director):
+=PROPER(A2)
+
+Convert text to UPPER or lower case:
+=UPPER(A2)
+=LOWER(A2)
+
+
+🔹 2. DATE FORMATTING
+------------------------------
+Split 'date_added' using "Text to Columns" → Delimited by comma (",") → Result = Month Day Year in 3 columns
+
+Convert Month (in text) to number (if needed):
+=MONTH(DATEVALUE(A2 & " 1"))
+
+Reconstruct date from MDY format to proper DMY date:
+=DATE(C2, MONTH(DATEVALUE(A2 & " 1")), B2)
+→ Where A2 = Month, B2 = Day, C2 = Year
+
+Format final date column as:
+DD/MM/YYYY (from Format Cells → Custom)
+
+
+🔹 3. HANDLING MISSING DATA
+------------------------------
+Replace blanks with "Unknown":
+=IF(A2="", "Unknown", A2)
+
+Use this in columns like director, cast, country, rating, date_added, etc.
+
+
+🔹 4. DUPLICATE DETECTION & REMOVAL
+------------------------------
+No formula — used Excel’s:
+Data → Remove Duplicates (based on full row or selected columns)
+
+Optional to highlight duplicates before removing:
+=COUNTIF(A:A, A2)>1
+→ Shows TRUE if duplicate exists
+
+
+🔹 5. COLUMN COMBINATIONS (Optional)
+------------------------------
+Combine text from multiple columns (if required):
+=A2 & ", " & B2
+
+Use TEXTJOIN (Excel 365) for dynamic combination:
+=TEXTJOIN(", ", TRUE, A2:C2)
+
+
+🔹 6. SPLITTING MULTI-VALUE COLUMNS
+------------------------------
+Split values by comma (e.g., genres in 'listed_in'):
+
+If using Excel 365:
+=TEXTSPLIT(A2, ", ")
+
+If not, use:
+Data → Text to Columns → Delimited → Use comma as separator
+
+
+🔹 7. VALIDATION & LOGIC
+------------------------------
+Flag invalid year (e.g., before 1900 or in future):
+=IF(OR(A2<1900, A2>YEAR(TODAY())), "Check", "OK")
+
+Check if 'type' column only contains "Movie" or "TV Show":
+=IF(OR(A2="Movie", A2="TV Show"), "Valid", "Invalid")
+
+
+🔹 8. CLEANING THE DURATION FIELD
+------------------------------
+Standardize 'duration' field (e.g., separate number from text):
+=LEFT(A2, FIND(" ", A2)-1) → Extract number
+=RIGHT(A2, LEN(A2) - FIND(" ", A2)) → Extract text (minutes/seasons)
+
+Convert extracted number to numeric:
+=VALUE(LEFT(A2, FIND(" ", A2)-1))
+
+
+🔹 9. OTHER USEFUL CLEANING FORMULAS
+------------------------------
+Remove specific word/phrase:
+=SUBSTITUTE(A2, "Unrated", "Unknown")
+
+Remove brackets or symbols:
+=SUBSTITUTE(A2, "(", "")
+=SUBSTITUTE(A2, ")", "")
+
+Extract year from a date:
+=YEAR(A2)
+
+Get number of characters (to find anomalies):
+=LEN(A2)
+
+Count number of commas (in 'listed_in'):
+=LEN(A2)-LEN(SUBSTITUTE(A2,",",""))
+
+------------------------------------
+🧼 All formulas above were used manually while inspecting and cleaning the Netflix dataset in Excel.
+For reproducibility, all steps are documented in the README.md file.
